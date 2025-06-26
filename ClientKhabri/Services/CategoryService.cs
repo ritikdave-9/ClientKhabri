@@ -20,7 +20,7 @@ namespace ClientKhabri.Services
 
         public async Task<List<Category>> GetAllCategoriesAsync()
         {
-            var response = await _httpClient.GetAsync("https://localhost:7045/api/category"); 
+            var response = await _httpClient.GetAsync("/all"); 
 
             if (!response.IsSuccessStatusCode)
             {

@@ -5,14 +5,21 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using ClientKhabri.Dtos;
+using ClientKhabri.Services.Interface;
 using ClientKhabri.Utils;
 using Enums;
 
 namespace ClientKhabri.Services
 {
-    public static class AuthService
+    public class AuthService : IAuthService
     {
-        public static async Task SignUpAsync(HttpClient client)
+        private readonly HttpClient client;
+
+        public AuthService (HttpClient httpClient) {
+            client = httpClient;
+        
+        }
+        public async Task SignUpAsync()
         {
             Console.Write("First Name: ");
             var firstName = Console.ReadLine();
@@ -46,7 +53,7 @@ namespace ClientKhabri.Services
             }
         }
 
-        public static async Task LoginAsync(HttpClient client)
+        public async Task LoginAsync()
         {
             Console.Write("Email: ");
             var email = Console.ReadLine();
@@ -67,18 +74,8 @@ namespace ClientKhabri.Services
                 var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponseDto>();
 
                 var firstName = loginResponse?.FirstName ?? "User";
-
+                Cache.SetUser(loginResponse?.UserID,loginResponse?.FirstName,loginResponse.Role);
                 Console.WriteLine($"\nLogin successful!");
-
-                if (loginResponse.Role == Role.User)
-                {
-                    // ✅ Inject dependencies
-                    var categoryService = new CategoryService(client);
-                    var newsDashboard = new NewsDashboard(categoryService);
-                    var userDashboard = new UserDashboard(newsDashboard);
-
-                    await userDashboard.ShowDashboardAsync(firstName);
-                }
             }
             else
             {
