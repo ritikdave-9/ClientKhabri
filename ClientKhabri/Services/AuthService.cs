@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 using ClientKhabri.Dtos;
 using ClientKhabri.Services.Interface;
 using ClientKhabri.Utils;
 using Enums;
+using Spectre.Console;
 
 namespace ClientKhabri.Services
 {
@@ -15,75 +14,99 @@ namespace ClientKhabri.Services
     {
         private readonly HttpClient client;
 
-        public AuthService (HttpClient httpClient) {
+        public AuthService(HttpClient httpClient)
+        {
             client = httpClient;
-        
         }
-        public async Task SignUpAsync()
+
+        public async Task<bool> SignUpAsync(UserSignupDto signupDto)
         {
-            Console.Write("First Name: ");
-            var firstName = Console.ReadLine();
-
-            Console.Write("Last Name: ");
-            var lastName = Console.ReadLine();
-
-            Console.Write("Email: ");
-            var email = Console.ReadLine();
-
-            Console.Write("Password: ");
-            var password = ConsoleHelper.ReadPassword();
-
-            var signupDto = new UserSignupDto
+            try
             {
-                FirstName = firstName,
-                LastName = lastName,
-                Email = email,
-                Password = password
-            };
+                var response = await client.PostAsJsonAsync("/api/User/signup", signupDto);
 
-            var response = await client.PostAsJsonAsync("/api/User/signup", signupDto);
-            if (response.IsSuccessStatusCode)
-            {
-                Console.WriteLine("Signup successful!");
+                if (response.IsSuccessStatusCode)
+                {
+                    AnsiConsole.MarkupLine("[green]✅ Signup successful![/]");
+                    return true;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+
+                    var message = response.StatusCode switch
+                    {
+                        HttpStatusCode.BadRequest => $"[red]❌ Signup failed: Bad Request.[/] [grey]Details: {errorContent}[/]",
+                        HttpStatusCode.Conflict => "[red]❌ Signup failed: User already exists.[/]",
+                        HttpStatusCode.InternalServerError => "[red]❌ Signup failed: Server error. Please try again later.[/]",
+                        _ => $"[red]❌ Signup failed: {response.StatusCode}.[/] [grey]Details: {errorContent}[/]"
+                    };
+
+                    AnsiConsole.MarkupLine(message);
+                }
             }
-            else
+            catch (HttpRequestException httpEx)
             {
-                Console.WriteLine($"Signup failed: {response.StatusCode}");
-                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                AnsiConsole.MarkupLine($"[red]❌ Network or request error:[/] {httpEx.Message}");
             }
+            catch (TaskCanceledException)
+            {
+                AnsiConsole.MarkupLine("[red]❌ Signup request timed out. Please check your network.[/]");
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]❌ Unexpected error during signup:[/] {ex.Message}");
+            }
+            return false;
         }
 
-        public async Task LoginAsync()
+        public async Task<bool> LoginAsync(LoginRequestDto loginDto)
         {
-            Console.Write("Email: ");
-            var email = Console.ReadLine();
+            bool isSuccess = false;
 
-            Console.Write("Password: ");
-            var password = ConsoleHelper.ReadPassword();
-
-            var loginDto = new LoginRequestDto
+            try
             {
-                Email = email,
-                Password = password
-            };
+                var response = await client.PostAsJsonAsync("/api/Auth/login", loginDto);
 
-            var response = await client.PostAsJsonAsync("/api/Auth/login", loginDto);
+                if (response.IsSuccessStatusCode)
+                {
+                    var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponseDto>();
 
-            if (response.IsSuccessStatusCode)
-            {
-                var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponseDto>();
+                    var firstName = loginResponse?.FirstName ?? "User";
+                    Cache.SetUser(loginResponse?.UserID, loginResponse?.FirstName, loginResponse.Role);
+                    AnsiConsole.MarkupLine($"\n[green]✅ Login successful! Welcome, [bold]{firstName}[/].[/]");
+                    isSuccess = true;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
 
-                var firstName = loginResponse?.FirstName ?? "User";
-                Cache.SetUser(loginResponse?.UserID,loginResponse?.FirstName,loginResponse.Role);
-                Console.WriteLine($"\nLogin successful!");
+                    var message = response.StatusCode switch
+                    {
+                        HttpStatusCode.Unauthorized => "[red]❌ Login failed: Unauthorized (Invalid username or password).[/]",
+                        HttpStatusCode.Forbidden => "[red]❌ Login failed: Forbidden (You do not have access).[/]",
+                        HttpStatusCode.BadRequest => $"[red]❌ Login failed: Bad Request.[/] [grey]Details: {errorContent}[/]",
+                        HttpStatusCode.InternalServerError => "[red]❌ Login failed: Server error. Please try again later.[/]",
+                        _ => $"[red]❌ Login failed: {response.StatusCode}.[/] [grey]Details: {errorContent}[/]"
+                    };
+
+                    AnsiConsole.MarkupLine(message);
+                }
             }
-            else
+            catch (HttpRequestException httpEx)
             {
-                Console.WriteLine($"\nLogin failed: {response.StatusCode}");
-                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                AnsiConsole.MarkupLine($"[red]❌ Network or request error:[/] {httpEx.Message}");
             }
+            catch (TaskCanceledException)
+            {
+                AnsiConsole.MarkupLine("[red]❌ Login request timed out. Please check your network.[/]");
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]❌ Unexpected error:[/] {ex.Message}");
+            }
+
+            return isSuccess;
         }
-
-
     }
 }
