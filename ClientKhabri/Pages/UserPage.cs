@@ -25,7 +25,6 @@ namespace ClientKhabri.Pages
 
             AnsiConsole.MarkupLine($"[dim]Date:[/] [cyan]{date}[/]   [dim]Time:[/] [cyan]{time}[/]");
 
-            // Menu
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("\n[bold]Please choose an option:[/]")
@@ -65,7 +64,6 @@ namespace ClientKhabri.Pages
                     return;
             }
 
-            // Return to menu
             AnsiConsole.MarkupLine("\n[grey]Press any key to return to dashboard...[/]");
             Console.ReadKey(true);
             await ShowUserPageAsync();
