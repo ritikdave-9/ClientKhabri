@@ -9,7 +9,7 @@ namespace ClientKhabri.Services.Interface
 {
     public interface ICategoryService
     {
-        Task<List<string>> GetAllCategoriesAsync();
+        Task<List<CategoryDto>> GetAllCategoriesAsync();
     }
 
 }

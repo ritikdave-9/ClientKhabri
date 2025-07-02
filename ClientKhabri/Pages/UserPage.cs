@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using ClientKhabri.Components;
 using ClientKhabri.Services.Interface;
@@ -42,13 +43,16 @@ namespace ClientKhabri.Pages
             {
                 case "Headlines":
 
-                    var categoryResponse = await  ServiceProvider.CategoryService.GetAllCategoriesAsync();
-                    var selectedCategory = CategoryComponent.ShowCategory(categoryResponse);
-                    var dateRange = DateAndTimeComponent.GetDateRange();
+                    
+                    await NewsPage.ShowAsync();
+
+
                     break;
 
                 case "Saved Articles":
-                    AnsiConsole.MarkupLine("[yellow]Saved Articles feature coming soon![/]");
+
+                    await SavedNewsPage.ShowAsync();
+
                     break;
 
                 case "Search (Coming Soon)":

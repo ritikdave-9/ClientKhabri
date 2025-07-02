@@ -7,7 +7,7 @@ namespace ClientKhabri.Components
 {
     public static class CategoryComponent
     {
-        public static string ShowCategory(List<string> categories)
+        public static CategoryDto ShowCategory(List<CategoryDto> categories)
         {
             if (categories == null || categories.Count == 0)
             {
@@ -23,15 +23,23 @@ namespace ClientKhabri.Components
                     .BorderStyle(new Style(Color.Orange1))
             );
 
-            string selectedCategory = AnsiConsole.Prompt(
+            var categoryNames = new List<string>();
+            foreach (var category in categories)
+            {
+                categoryNames.Add(category.CategoryName);
+            }
+
+            string selectedCategoryName = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("[bold cyan]Choose a category:[/]")
                     .PageSize(10)
-                    .AddChoices(categories)
+                    .AddChoices(categoryNames)
             );
 
-            AnsiConsole.MarkupLine($"\n[green]You selected:[/] [bold]{selectedCategory}[/]");
-            return selectedCategory;
+            AnsiConsole.MarkupLine($"\n[green]You selected:[/] [bold]{selectedCategoryName}[/]");
+
+            return categories.Find(c => c.CategoryName == selectedCategoryName);
         }
+
     }
 }

@@ -50,7 +50,7 @@ namespace ClientKhabri.Components
                     to = AnsiConsole.Prompt(
                         new TextPrompt<DateTime>("Enter [green]To Date[/] (yyyy-MM-dd):")
                             .Validate(date =>
-                                date <= DateTime.Today && date >= from
+                                date <= DateTime.Today.AddDays(1) && date >= from
                                     ? ValidationResult.Success()
                                     : ValidationResult.Error("[red]To date must be after or equal to From date and not in future.[/]")));
                     break;

@@ -14,5 +14,7 @@ namespace ClientKhabri
         public static readonly ICategoryService CategoryService = new CategoryService(_httpClient);
         public static readonly INewsService NewsService = new NewsService(_httpClient);
         public static readonly IAuthService AuthService = new AuthService(_httpClient);
+        public static readonly HttpRequestManager httpRequestManager = new HttpRequestManager(_httpClient);
+
     }
 }

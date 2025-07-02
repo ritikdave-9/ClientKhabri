@@ -9,8 +9,10 @@ namespace ClientKhabri.Services.Interface
 {
     public interface INewsService
     {
-        Task<List<News>> GetNewsByCategoryAsync(string categoryId);
+        Task<List<News>> GetNewsByCategoryAsync(int categoryId ,DateRangeDto dateRange);
         Task<bool> SaveNewsAsync(string newsId);
+        Task<List<News>> GetSavedNewsAsync();
+        Task<bool> DeleteSavedNewsAsync(string newsId);
 
     }
 }

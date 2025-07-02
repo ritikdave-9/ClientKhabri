@@ -11,7 +11,7 @@ namespace ClientKhabri.Dtos
     {
         public string FirstName { get; set; }
 
-        public string UserID { get; set; }
+        public int UserID { get; set; }
         public Role Role { get; set; }
     }
 }

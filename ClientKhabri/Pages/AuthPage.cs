@@ -11,6 +11,7 @@ namespace ClientKhabri.Pages
         public static async Task ShowAsync()
         {
             while (true)
+            
             {
                 AnsiConsole.Clear();
                 AnsiConsole.Write(
@@ -35,8 +36,7 @@ namespace ClientKhabri.Pages
                         var signupResponse = await ServiceProvider.AuthService.SignUpAsync(userSignupData);
                         if (signupResponse)
                         {
-                            AnsiConsole.MarkupLine("[green]Signup successful! Redirecting to dashboard...[/]");
-                            await UserPage.ShowUserPageAsync();
+                            AnsiConsole.MarkupLine("[green]Signup successful! Redirecting to dashboard...[/]");                            ;
                         }
                         else
                         {
@@ -66,6 +66,7 @@ namespace ClientKhabri.Pages
 
                 AnsiConsole.MarkupLine("\n[grey]Press any key to return to menu...[/]");
                 Console.ReadKey(true);
+            
             }
         }
     }

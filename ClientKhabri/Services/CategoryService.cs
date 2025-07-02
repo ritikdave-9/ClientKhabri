@@ -19,11 +19,11 @@ namespace ClientKhabri.Services
             _httpClient = httpClient;
         }
 
-        public async Task<List<string>> GetAllCategoriesAsync()
+        public async Task<List<CategoryDto>> GetAllCategoriesAsync()
         {
             try
             {
-                var response = await _httpClient.GetAsync("/all");
+                var response = await ServiceProvider.httpRequestManager.SendAsync(HttpMethod.Get,path:"/Category/all");
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -34,7 +34,7 @@ namespace ClientKhabri.Services
                 var json = await response.Content.ReadAsStringAsync();
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-                var categories = JsonSerializer.Deserialize<List<string>>(json, options);
+                var categories = JsonSerializer.Deserialize<List<CategoryDto>>(json, options);
 
                 if (categories == null)
                 {
