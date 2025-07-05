@@ -56,7 +56,20 @@ namespace ClientKhabri.Pages
                     } while (saveMore);
                     break;
                 case "Report Article":
-                    AnsiConsole.MarkupLine("[yellow]Report Article feature coming soon![/]");
+                    bool reportMore;
+                    do
+                    {
+                        var inputNewsId = AnsiConsole.Ask<int>("[bold]Enter the News ID to report:[/]");
+                        var reason = AnsiConsole.Ask<string>("[bold]Enter the reason for reporting:[/]");
+                        var reportResult = await ServiceProvider.NewsService.ReportNewsAsync(inputNewsId, reason);
+
+                        if (reportResult)
+                            AnsiConsole.MarkupLine("[green]News article reported successfully![/]");
+                        else
+                            AnsiConsole.MarkupLine("[red]Failed to report the news article. Please try again.[/]");
+
+                        reportMore = AnsiConsole.Confirm("Do you want to report another news article?");
+                    } while (reportMore);
                     break;
             }
         }

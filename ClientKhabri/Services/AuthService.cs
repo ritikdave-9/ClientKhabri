@@ -20,27 +20,16 @@ namespace ClientKhabri.Services
         {
             try
             {
-                var response = await ServiceProvider.httpRequestManager.SendAsync(HttpMethod.Post, "/User/signup", body: signupDto);
+                var response = await ServiceProvider.httpRequestManager.SendAsync<dynamic>(HttpMethod.Post, ApiEndpoints.User.Signup, body: signupDto);
 
-                if (response.IsSuccessStatusCode)
+                if (response.Response.IsSuccessStatusCode)
                 {
                     ConsolePrinter.PrintSuccess("Signup successful!");
                     return true;
                 }
                 else
                 {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-
-                    var message = response.StatusCode switch
-                    {
-                        HttpStatusCode.BadRequest => $"Signup failed: Bad Request. Details: {errorContent}",
-                        HttpStatusCode.Conflict => "Signup failed: User already exists.",
-                        HttpStatusCode.InternalServerError => "Signup failed: Server error. Please try again later.",
-                        _ => $"Signup failed: {response.StatusCode}. Details: {errorContent}"
-                    };
-
-
-                    ConsolePrinter.PrintError(message);
+                    ConsolePrinter.PrintError(response.Error.Message);
                 }
             }
             catch (Exception ex)
@@ -56,33 +45,20 @@ namespace ClientKhabri.Services
 
             try
             {
-                var response = await ServiceProvider.httpRequestManager.SendAsync(HttpMethod.Post,"/Auth/login", body:loginDto);
+                var response = await ServiceProvider.httpRequestManager.SendAsync<LoginResponseDto>(HttpMethod.Post,ApiEndpoints.Auth.Login, body:loginDto);
                 
 
-                if (response.IsSuccessStatusCode)
+                if (response.Response.IsSuccessStatusCode)
                 {
-                    var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponseDto>();
-
-                    var firstName = loginResponse?.FirstName ?? "User";
-                    Cache.SetUser(loginResponse.UserID, loginResponse?.FirstName, loginResponse.Role);
+                    var firstName = response.Data?.FirstName ?? "User";
+                    Cache.SetUser(response.Data.UserID, response.Data?.FirstName, response.Data.Role);
                     ConsolePrinter.PrintError($" Login successful! Welcome,{firstName}");
                     isSuccess = true;
                 }
                 else
                 {
-                    var errorContent = await response.Content.ReadAsStringAsync();
 
-                    var message = response.StatusCode switch
-                    {
-                        HttpStatusCode.Unauthorized => "Login failed: Unauthorized (Invalid username or password).",
-                        HttpStatusCode.Forbidden => "Login failed: Forbidden (You do not have access).",
-                        HttpStatusCode.BadRequest => $"Login failed: Bad Request. Details: {errorContent}",
-                        HttpStatusCode.InternalServerError => "Login failed: Server error. Please try again later.",
-                        _ => $"Login failed: {response.StatusCode}. Details: {errorContent}"
-                    };
-
-
-                    ConsolePrinter.PrintError(message);
+                    ConsolePrinter.PrintError(response.Error.Message);
                 }
             }
 

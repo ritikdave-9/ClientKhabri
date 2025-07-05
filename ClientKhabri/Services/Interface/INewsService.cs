@@ -13,6 +13,7 @@ namespace ClientKhabri.Services.Interface
         Task<bool> SaveNewsAsync(string newsId);
         Task<List<News>> GetSavedNewsAsync();
         Task<bool> DeleteSavedNewsAsync(string newsId);
+        Task<bool> ReportNewsAsync(int newsId, string reason);
 
     }
 }

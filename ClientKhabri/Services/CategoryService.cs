@@ -23,18 +23,17 @@ namespace ClientKhabri.Services
         {
             try
             {
-                var response = await ServiceProvider.httpRequestManager.SendAsync(HttpMethod.Get,path:"/Category/all");
+                var response = await ServiceProvider.httpRequestManager.SendAsync<List<CategoryDto>>(HttpMethod.Get,path:ApiEndpoints.Category.GetAll);
 
-                if (!response.IsSuccessStatusCode)
+                if (!response.Response.IsSuccessStatusCode)
                 {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    throw new HttpRequestException($"Failed to fetch categories. Status Code: {response.StatusCode}. Response: {errorContent}");
+                    throw new HttpRequestException($"Failed to fetch categories. Status Code: {response.Response.StatusCode}. message: {response.Error.Message}");
                 }
 
-                var json = await response.Content.ReadAsStringAsync();
+                var jsonResponse = await response.Response.Content.ReadAsStringAsync();
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-                var categories = JsonSerializer.Deserialize<List<CategoryDto>>(json, options);
+                var categories = JsonSerializer.Deserialize<List<CategoryDto>>(jsonResponse, options);
 
                 if (categories == null)
                 {

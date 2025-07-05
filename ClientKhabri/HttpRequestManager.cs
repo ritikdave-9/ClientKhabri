@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -19,15 +19,14 @@ namespace ClientKhabri
             _httpClient = httpClient;
         }
 
-        public async Task<HttpResponseMessage> SendAsync(
+        public async Task<ApiResponse<T>> SendAsync<T>(
             HttpMethod method,
             string path,
             dynamic queryParams = null,
             dynamic body = null,
             dynamic headers = null)
-        
         {
-            var uriBuilder = new UriBuilder(new Uri(_httpClient.BaseAddress, $"/api{path}"));
+            var uriBuilder = new UriBuilder(new Uri(_httpClient.BaseAddress, $"{path}"));
             if (queryParams != null && queryParams.Count > 0)
             {
                 var query = HttpUtility.ParseQueryString(uriBuilder.Query);
@@ -58,14 +57,53 @@ namespace ClientKhabri
             try
             {
                 var response = await _httpClient.SendAsync(request);
-                return response;
+
+                T data = default;
+                ErrorResponseDto error = null;
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    if (!string.IsNullOrWhiteSpace(content))
+                    {
+                        try
+                        {
+                            data = JsonSerializer.Deserialize<T>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrWhiteSpace(content))
+                    {
+                        try
+                        {
+                            error = JsonSerializer.Deserialize<ErrorResponseDto>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+
+                return new ApiResponse<T>
+                {
+                    Response = response,
+                    Data = data,
+                    Error = error ?? new ErrorResponseDto
+                    {
+                        Message = response.ReasonPhrase,
+                    }
+                };
             }
             catch (Exception ex)
             {
                 ConsolePrinter.PrintError($"Unexpected error:[/] {ex.Message}");
                 throw;
             }
-
         }
     }
 }

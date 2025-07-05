@@ -6,10 +6,10 @@ namespace ClientKhabri.Components
     {
         public static void ShowNews(dynamic news)
         {
-            var title = news.Title ?? "No Title";
-            var description = news.Description ?? "No Description";
-            var url = news.Url ?? "N/A";
-            var newsId = news.NewsID ?? "N/A";
+            var title = Markup.Escape(news.Title ?? "No Title");
+            var description = Markup.Escape(news.Description ?? "No Description");
+            var url = Markup.Escape(news.Url ?? "N/A");
+            var newsId = Markup.Escape(news.NewsID?.ToString() ?? "N/A");
             var publishedAt = news.PublishedAt != null
                 ? ((DateTime)news.PublishedAt).ToString("yyyy-MM-dd HH:mm")
                 : "N/A";
