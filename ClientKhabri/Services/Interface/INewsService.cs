@@ -14,6 +14,8 @@ namespace ClientKhabri.Services.Interface
         Task<List<News>> GetSavedNewsAsync();
         Task<bool> DeleteSavedNewsAsync(string newsId);
         Task<bool> ReportNewsAsync(int newsId, string reason);
+        Task<NewsSearchResultDto> SearchNewsAsync(string term, int pageNo =1 , int pageSize = 10);
+        Task<PersonalizedNewsResponse> GetPersonalizedNewsAsync(int pageNo = 1, int pageSize = 10);
 
     }
 }

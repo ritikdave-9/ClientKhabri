@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using System.Text.Json;
 using ClientKhabri.Dtos;
 using ClientKhabri.Services.Interface;
 using ClientKhabri.Utils;
@@ -171,10 +172,72 @@ namespace ClientKhabri.Services
                 return false;
             }
         }
+        public async Task<NewsSearchResultDto> SearchNewsAsync(string term, int pageNo = 1, int pageSize = 10)
+        {
+            var query = $"?term={Uri.EscapeDataString(term)}&pageNo={pageNo}&pageSize={pageSize}";
+            var response = await ServiceProvider.httpRequestManager.SendAsync<NewsSearchResultDto>(
+                HttpMethod.Get, ApiEndpoints.News.Search + query);
 
+            if (!response.Response.IsSuccessStatusCode)
+                throw new HttpRequestException($"Failed to fetch news. Status Code: {response.Response.StatusCode}");
+
+            var jsonResponse = await response.Response.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var result = JsonSerializer.Deserialize<NewsSearchResultDto>(jsonResponse, options);
+
+            return result ?? new NewsSearchResultDto();
+        }
+
+        public async Task<PersonalizedNewsResponse> GetPersonalizedNewsAsync(int pageNo = 1, int pageSize = 10)
+        {
+            try
+            {
+                var query = new Dictionary<string, string>
+{
+    { "userId", Cache.UserID.ToString() },
+    { "pageNo", pageNo.ToString() },
+    { "pageSize", pageSize.ToString() }
+};
+                var response = await ServiceProvider.httpRequestManager.SendAsync<PersonalizedNewsResponse>(
+                    HttpMethod.Get,
+                    ApiEndpoints.News.Personalized,
+                    queryParams:query
+                );
+
+                if (!response.Response.IsSuccessStatusCode)
+                {
+                    throw new HttpRequestException($"Failed to fetch personalized news. Status Code: {response.Response.StatusCode}. message: {response.Error?.Message}");
+                }
+
+                var news = response.Data;
+
+                if (news == null)
+                {
+                    throw new Exception("Received null when deserializing personalized news list.");
+                }
+
+                return news;
+            }
+            catch (HttpRequestException ex)
+            {
+                ConsolePrinter.PrintError($"[HTTP ERROR] {ex.Message}");
+                throw;
+            }
+            catch (JsonException ex)
+            {
+                ConsolePrinter.PrintError($"[JSON ERROR] Failed to parse personalized news list. {ex.Message}");
+                throw new Exception("Invalid response format received from the server.", ex);
+            }
+            catch (Exception ex)
+            {
+                ConsolePrinter.PrintError($"[GENERAL ERROR] {ex.Message}");
+                throw new Exception("An unexpected error occurred while fetching personalized news.", ex);
+            }
+        }
         private class NewsPageResponse
         {
             public List<News> Items { get; set; }
         }
+        
     }
 }

@@ -3,7 +3,7 @@ public class ApiResponse<T>
     public HttpResponseMessage Response { get; set; }
 
     public T Data { get; set; }
-    public ErrorResponseDto Error { get; set; } = new ErrorResponseDto
+    public MessageResponseDto Error { get; set; } = new MessageResponseDto
     {
         Message = "An error occurred while processing your request."
     };

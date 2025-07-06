@@ -9,7 +9,8 @@ namespace ClientKhabri.Services.Interface
 {
     public interface ICategoryService
     {
-        Task<List<CategoryDto>> GetAllCategoriesAsync();
+        Task<List<CategoryStatusDto>> GetAllCategoriesAsync();
+        Task<bool> ToggleActiveAsync(int id);
     }
 
 }

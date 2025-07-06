@@ -5,21 +5,22 @@ using System;
 namespace ClientKhabri.Components
 {
     
-    public class DateAndTimeComponent
+    public class DateAndTimeComponentInput
     {
         public static DateRangeDto GetDateRange()
         {
-            var choice = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("[bold yellow]Select a Date Range[/]")
-                    .AddChoices(new[]
-                    {
-                        "Today",
+            HeaderComponent.Render("Select the Date Range");
+            var choises = new List<string>() {"Today",
                         "Yesterday",
                         "Last 7 Days",
                         "Last 30 Days",
                         "Custom"
-                    }));
+            };
+
+            var choice = MenuComponent.ShowMenu(
+                choises,
+                "[bold cyan]Select a date range:[/]"
+            );
 
             DateTime from, to;
 
@@ -57,7 +58,7 @@ namespace ClientKhabri.Components
             }
 
             AnsiConsole.MarkupLine($"\n[bold green]✔ Selected Date Range:[/] [cyan]{from:yyyy-MM-dd}[/] to [cyan]{to:yyyy-MM-dd}[/]\n");
-
+            AnsiConsole.Clear();
             return new DateRangeDto
             {
                 From = from,

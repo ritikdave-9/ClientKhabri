@@ -5,8 +5,8 @@ namespace ClientKhabri
 {
     public static class Cache
     {
-        public static int? UserID { get; private set; } = 2;
-        public static string Username { get; private set; }
+        public static int? UserID { get; private set; }
+        public static string Username { get; private set; } = "Anonymous User";
         public static Role Role { get; private set; }
 
         public static void SetUser(int userId, string username, Role role)

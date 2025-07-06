@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ClientKhabri.Dtos;
 using Spectre.Console;
+using ClientKhabri.Components;
 
 namespace ClientKhabri.Components
 {
     public static class CategoryComponent
     {
-        public static CategoryDto ShowCategory(List<CategoryDto> categories)
+        public static CategoryStatusDto ShowCategory(List<CategoryStatusDto> categories)
         {
             if (categories == null || categories.Count == 0)
             {
-                AnsiConsole.MarkupLine("[red]No categories available.[/]");
+                MessageComponent.ShowMessage("No categories available.", "red");
                 return null;
             }
 
             AnsiConsole.Clear();
-            AnsiConsole.Write(
-                new Panel("[bold yellow]Please Select a News Category[/]")
-                    .Border(BoxBorder.Double)
-                    .Header("[green]Categories[/]", Justify.Center)
-                    .BorderStyle(new Style(Color.Orange1))
-            );
+
+            HeaderComponent.Render("Please Select a News Category");
 
             var categoryNames = new List<string>();
             foreach (var category in categories)
@@ -29,17 +25,14 @@ namespace ClientKhabri.Components
                 categoryNames.Add(category.CategoryName);
             }
 
-            string selectedCategoryName = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("[bold cyan]Choose a category:[/]")
-                    .PageSize(10)
-                    .AddChoices(categoryNames)
+            string selectedCategoryName = MenuComponent.ShowMenu(
+                categoryNames,
+                "[bold cyan]Choose a category:[/]"
             );
 
-            AnsiConsole.MarkupLine($"\n[green]You selected:[/] [bold]{selectedCategoryName}[/]");
+            MessageComponent.ShowMessage($"\nYou selected: [bold]{selectedCategoryName}[/]", "green");
 
             return categories.Find(c => c.CategoryName == selectedCategoryName);
         }
-
     }
 }

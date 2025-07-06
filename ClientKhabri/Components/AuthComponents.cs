@@ -8,14 +8,12 @@ namespace ClientKhabri.Components
     {
         public static LoginRequestDto LoginForm()
         {
-            var email = AnsiConsole.Prompt(
-                new TextPrompt<string>("Email:")
-                    .PromptStyle("green"));
+            AnsiConsole.Clear();
+            HeaderComponent.Render("Login");
+            DateTimeComponent.Render();
 
-            var password = AnsiConsole.Prompt(
-                new TextPrompt<string>("Password:")
-                    .PromptStyle("green")
-                    .Secret());
+            var email = InputComponent.AskString("Email:");
+            var password = InputComponent.AskPassword("Password:");
 
             return new LoginRequestDto
             {
@@ -26,22 +24,14 @@ namespace ClientKhabri.Components
 
         public static UserSignupDto UserSignupForm()
         {
-            var firstName = AnsiConsole.Prompt(
-                new TextPrompt<string>("First Name:")
-                    .PromptStyle("green"));
+            AnsiConsole.Clear();
+            HeaderComponent.Render("Sign Up");
+            DateTimeComponent.Render();
 
-            var lastName = AnsiConsole.Prompt(
-                new TextPrompt<string>("Last Name:")
-                    .PromptStyle("green"));
-
-            var email = AnsiConsole.Prompt(
-                new TextPrompt<string>("Email:")
-                    .PromptStyle("green"));
-
-            var password = AnsiConsole.Prompt(
-                new TextPrompt<string>("Password:")
-                    .PromptStyle("green")
-                    .Secret());
+            var firstName = InputComponent.AskString("First Name:");
+            var lastName = InputComponent.AskString("Last Name:");
+            var email = InputComponent.AskString("Email:");
+            var password = InputComponent.AskPassword("Password:");
 
             return new UserSignupDto
             {

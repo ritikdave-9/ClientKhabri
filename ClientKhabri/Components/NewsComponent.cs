@@ -1,15 +1,16 @@
+using ClientKhabri.Dtos;
 using Spectre.Console;
 
 namespace ClientKhabri.Components
 {
     public static class NewsComponent
     {
-        public static void ShowNews(dynamic news)
+        public static void ShowNews(News news)
         {
             var title = Markup.Escape(news.Title ?? "No Title");
             var description = Markup.Escape(news.Description ?? "No Description");
             var url = Markup.Escape(news.Url ?? "N/A");
-            var newsId = Markup.Escape(news.NewsID?.ToString() ?? "N/A");
+            var newsId = Markup.Escape(news.NewsID.ToString() ?? "N/A");
             var publishedAt = news.PublishedAt != null
                 ? ((DateTime)news.PublishedAt).ToString("yyyy-MM-dd HH:mm")
                 : "N/A";

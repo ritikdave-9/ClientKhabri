@@ -11,11 +11,9 @@ namespace KhabriConsoleClient
         static async Task Main(string[] args)
         {
             Console.WriteLine("Welcome to Khabri Console Client");
-            await UserPage.ShowUserPageAsync();
-            //await AuthPage.ShowAsync();
-            //await UserPage.ShowCategoryAsync();
-            //DateAndTimeComponent.GetDateRange();
-            //await SavedNewsPage.ShowAsync();
+            await AuthPage.ShowAsync();
+            //await NewsPage.ShowAsync();
+            
 
         }
     }

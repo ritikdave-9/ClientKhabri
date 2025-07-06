@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -19,21 +20,20 @@ namespace ClientKhabri.Services
             _httpClient = httpClient;
         }
 
-        public async Task<List<CategoryDto>> GetAllCategoriesAsync()
+        public async Task<List<CategoryStatusDto>> GetAllCategoriesAsync()
         {
             try
             {
-                var response = await ServiceProvider.httpRequestManager.SendAsync<List<CategoryDto>>(HttpMethod.Get,path:ApiEndpoints.Category.GetAll);
+                var response = await ServiceProvider.httpRequestManager.SendAsync<List<CategoryStatusDto>>(HttpMethod.Get, path: ApiEndpoints.Category.GetAll);
 
                 if (!response.Response.IsSuccessStatusCode)
                 {
                     throw new HttpRequestException($"Failed to fetch categories. Status Code: {response.Response.StatusCode}. message: {response.Error.Message}");
                 }
 
-                var jsonResponse = await response.Response.Content.ReadAsStringAsync();
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+               
 
-                var categories = JsonSerializer.Deserialize<List<CategoryDto>>(jsonResponse, options);
+                var categories = response.Data ;
 
                 if (categories == null)
                 {
@@ -58,7 +58,20 @@ namespace ClientKhabri.Services
                 throw new Exception("An unexpected error occurred while fetching categories.", ex);
             }
         }
+        public async Task<bool> ToggleActiveAsync(int id)
+        {
+            try
+            {
+                var endpoint = ApiEndpoints.Category.ToggleActive + id.ToString();
+                var response = await ServiceProvider.httpRequestManager.SendAsync<CategoryDto>(HttpMethod.Put, endpoint);
+                return response.Response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                ConsolePrinter.PrintError($"[ERROR] Failed to toggle category active state: {ex.Message}");
+                return false;
+            }
+        }
 
     }
-
 }

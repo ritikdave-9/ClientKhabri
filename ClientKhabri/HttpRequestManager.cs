@@ -50,8 +50,8 @@ namespace ClientKhabri
 
             if (body != null && (method == HttpMethod.Post || method == HttpMethod.Put || method.Method == "PATCH"))
             {
-                var json = JsonSerializer.Serialize(body);
-                request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                var requestJson = JsonSerializer.Serialize(body);
+                request.Content = new StringContent(requestJson, Encoding.UTF8, "application/json");
             }
 
             try
@@ -59,7 +59,7 @@ namespace ClientKhabri
                 var response = await _httpClient.SendAsync(request);
 
                 T data = default;
-                ErrorResponseDto error = null;
+                MessageResponseDto error = null;
                 var content = await response.Content.ReadAsStringAsync();
 
                 if (response.IsSuccessStatusCode)
@@ -70,8 +70,9 @@ namespace ClientKhabri
                         {
                             data = JsonSerializer.Deserialize<T>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                         }
-                        catch
+                        catch(Exception ex)
                         {
+                            ConsolePrinter.PrintError($"Exception while mapping the Data of response {ex}");
                         }
                     }
                 }
@@ -81,10 +82,12 @@ namespace ClientKhabri
                     {
                         try
                         {
-                            error = JsonSerializer.Deserialize<ErrorResponseDto>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                            error = JsonSerializer.Deserialize<MessageResponseDto>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                         }
-                        catch
+                        catch(Exception ex)
                         {
+                            ConsolePrinter.PrintError($"Exception while mapping the Data of response {ex}");
+
                         }
                     }
                 }
@@ -93,7 +96,7 @@ namespace ClientKhabri
                 {
                     Response = response,
                     Data = data,
-                    Error = error ?? new ErrorResponseDto
+                    Error = error ?? new MessageResponseDto
                     {
                         Message = response.ReasonPhrase,
                     }

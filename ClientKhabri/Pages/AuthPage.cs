@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ClientKhabri.Components;
 using ClientKhabri.Services.Interface;
+using Enums;
 using Spectre.Console;
 
 namespace ClientKhabri.Pages
@@ -11,22 +12,15 @@ namespace ClientKhabri.Pages
         public static async Task ShowAsync()
         {
             while (true)
-            
             {
                 AnsiConsole.Clear();
-                AnsiConsole.Write(
-                    new Panel("[bold yellow]Welcome to Khabri Auth Portal[/]")
-                        .Border(BoxBorder.Double)
-                        .BorderStyle(new Style(Color.Orange1))
-                        .Header("[bold green]Main Menu[/]", Justify.Center)
-                        .Padding(2, 1, 2, 1)
-                );
+                HeaderComponent.Welcome();
+                HeaderComponent.Render("Khabri Auth Portal");
+                DateTimeComponent.Render();
 
-                var choice = AnsiConsole.Prompt(
-                    new SelectionPrompt<string>()
-                        .Title("[bold]Choose an option:[/]")
-                        .PageSize(5)
-                        .AddChoices(new[] { "Sign Up", "Login", "Exit" })
+                var choice = MenuComponent.ShowMenu(
+                    new[] { "Sign Up", "Login", "Exit" },
+                    "Choose an option:"
                 );
 
                 switch (choice)
@@ -36,37 +30,42 @@ namespace ClientKhabri.Pages
                         var signupResponse = await ServiceProvider.AuthService.SignUpAsync(userSignupData);
                         if (signupResponse)
                         {
-                            AnsiConsole.MarkupLine("[green]Signup successful! Redirecting to dashboard...[/]");                            ;
+                            HeaderComponent.Render("Signup successful! Redirecting to dashboard...");
                         }
                         else
                         {
-                            AnsiConsole.MarkupLine("[red]Signup failed. Please try again.[/]");
+                            HeaderComponent.Render("Signup failed. Please try again.");
                         }
                         break;
 
                     case "Login":
                         var loginRequestData = AuthComponents.LoginForm();
                         var loginResponse = await ServiceProvider.AuthService.LoginAsync(loginRequestData);
-                        if (loginResponse)
+                        if (!loginResponse)
                         {
-                            AnsiConsole.MarkupLine("[green]Login successful! Redirecting to dashboard...[/]");
+                            HeaderComponent.Render("Login failed. Please try again.");
+                            break;
+                        }
+                        if (Cache.Role == Role.User)
+                        {
+                            HeaderComponent.Render("User Login successful! Redirecting to dashboard...");
                             await UserPage.ShowUserPageAsync();
                         }
-                        else
+                        else if (Cache.Role == Role.Admin)
                         {
-                            AnsiConsole.MarkupLine("[red]Login failed. Please try again.[/]");
+                            HeaderComponent.Render("Admin Login successful! Redirecting to dashboard...");
+                            await AdminPage.ShowAdminPageAsync();
                         }
                         break;
 
                     case "Exit":
-                        AnsiConsole.MarkupLine("[yellow]Exiting application. Goodbye![/]");
+                        HeaderComponent.Render("Exiting application. Goodbye!");
                         Environment.Exit(0);
                         return;
                 }
 
                 AnsiConsole.MarkupLine("\n[grey]Press any key to return to menu...[/]");
                 Console.ReadKey(true);
-            
             }
         }
     }

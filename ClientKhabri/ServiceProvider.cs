@@ -28,11 +28,22 @@ namespace ClientKhabri
             NewsService = new NewsService(_httpClient);
             AuthService = new AuthService(_httpClient);
             httpRequestManager = new HttpRequestManager(_httpClient);
+            NewsSubscribeService = new NewsSubscribeService(_httpClient);
+            KeywordService = new KeywordService(_httpClient);
+            NewsSourceService = new NewsSourceService(_httpClient);
+            NotificationService = new NotificationService(_httpClient);
+            LikeDislikeService = new LikeDislikeService();
         }
 
         public static readonly ICategoryService CategoryService;
         public static readonly INewsService NewsService;
         public static readonly IAuthService AuthService;
         public static readonly HttpRequestManager httpRequestManager;
+        public static readonly INewsSubscribeService NewsSubscribeService;
+        public static readonly IKeywordService KeywordService;
+        public static readonly INewsSourceService NewsSourceService;
+        public static readonly INotificationService NotificationService;
+        public static readonly ILikeDislikeService LikeDislikeService;
+        
     }
 }
