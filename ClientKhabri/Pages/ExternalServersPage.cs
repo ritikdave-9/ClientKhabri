@@ -109,7 +109,7 @@ namespace ClientKhabri.Pages
                 HeaderComponent.Render("No changes saved.");
             }
 
-            AnsiConsole.MarkupLine("\n[grey]Press any key to return...");
+            AnsiConsole.MarkupLine("\n[grey]Press any key to return...[/]");
             Console.ReadKey(true);
         }
     }

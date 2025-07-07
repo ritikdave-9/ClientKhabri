@@ -38,6 +38,11 @@ namespace ClientKhabri
             }
 
             var request = new HttpRequestMessage(method, uriBuilder.Uri);
+            if (!string.IsNullOrWhiteSpace(Cache.AuthToken))
+            {
+                request.Headers.Remove("Authorization");
+                request.Headers.Add("Authorization", $"Bearer {Cache.AuthToken}");
+            }
 
             if (headers != null)
             {

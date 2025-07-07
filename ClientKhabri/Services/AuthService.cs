@@ -51,7 +51,7 @@ namespace ClientKhabri.Services
                 if (response.Response.IsSuccessStatusCode)
                 {
                     var firstName = response.Data?.FirstName ?? "User";
-                    Cache.SetUser(response.Data.UserID, response.Data?.FirstName, response.Data.Role);
+                    Cache.SetUser(response.Data.UserID, response.Data?.FirstName, response.Data.Role,authToken:response.Data.AuthToken);
                     ConsolePrinter.PrintError($" Login successful! Welcome,{firstName}");
                     isSuccess = true;
                 }

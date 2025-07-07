@@ -15,6 +15,7 @@ namespace ClientKhabri.Dtos
 
         [JsonPropertyName("role")]
         public string RoleString { get; set; }
+        public string AuthToken { get; set; }
 
         [JsonIgnore]
         public Role Role => Enum.TryParse<Role>(RoleString, true, out var role) ? role : Role.User;

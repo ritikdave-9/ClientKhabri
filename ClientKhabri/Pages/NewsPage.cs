@@ -144,7 +144,11 @@ namespace ClientKhabri.Pages
             {
                 MessageComponent.ShowError($"Failed to fetch personalized news: {ex.Message}");
             }
-
+            
+            MenuComponent.ShowMenu(
+                    new[] { "Back" },
+                    "\n[bold]What would you like to do?[/]"
+                );
             MessageComponent.ShowInfo("Press any key to return...");
             Console.ReadKey(true);
         }
