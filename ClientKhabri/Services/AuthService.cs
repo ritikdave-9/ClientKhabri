@@ -34,7 +34,7 @@ namespace ClientKhabri.Services
             }
             catch (Exception ex)
             {
-                ConsolePrinter.PrintError($"Unexpected error during signup: {ex.Message}");
+                ConsolePrinter.PrintError($"Unexpected error during signup: ");
             }
             return false;
         }
@@ -72,7 +72,7 @@ namespace ClientKhabri.Services
             }
             catch (Exception ex)
             {
-                ConsolePrinter.PrintError($"Unexpected error: {ex.Message}");
+                ConsolePrinter.PrintError($"Unexpected error: ");
             }
 
 

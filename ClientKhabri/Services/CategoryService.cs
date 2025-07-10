@@ -28,7 +28,7 @@ namespace ClientKhabri.Services
 
                 if (!response.Response.IsSuccessStatusCode)
                 {
-                    throw new HttpRequestException($"Failed to fetch categories. Status Code: {response.Response.StatusCode}. message: {response.Error.Message}");
+                    throw new HttpRequestException($"Failed to fetch categories. Status Code: {response.Response.StatusCode}");
                 }
 
                
@@ -44,17 +44,17 @@ namespace ClientKhabri.Services
             }
             catch (HttpRequestException ex)
             {
-                ConsolePrinter.PrintError($"[HTTP ERROR] {ex.Message}");
+                ConsolePrinter.PrintError($"[HTTP ERROR] ");
                 throw;
             }
             catch (JsonException ex)
             {
-                ConsolePrinter.PrintError($"[JSON ERROR] Failed to parse category list. {ex.Message}");
+                ConsolePrinter.PrintError($"[JSON ERROR] Failed to parse category list. ");
                 throw new Exception("Invalid response format received from the server.", ex);
             }
             catch (Exception ex)
             {
-                ConsolePrinter.PrintError($"[GENERAL ERROR] {ex.Message}");
+                ConsolePrinter.PrintError($"[GENERAL ERROR] ");
                 throw new Exception("An unexpected error occurred while fetching categories.", ex);
             }
         }
@@ -68,7 +68,7 @@ namespace ClientKhabri.Services
             }
             catch (Exception ex)
             {
-                ConsolePrinter.PrintError($"[ERROR] Failed to toggle category active state: {ex.Message}");
+                ConsolePrinter.PrintError($"[ERROR] Failed to toggle category active state: ");
                 return false;
             }
         }

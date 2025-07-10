@@ -109,7 +109,7 @@ namespace ClientKhabri
             }
             catch (Exception ex)
             {
-                ConsolePrinter.PrintError($"Unexpected error:[/] {ex.Message}");
+                ConsolePrinter.PrintError($"Unexpected error:[/] ");
                 throw;
             }
         }

@@ -22,7 +22,7 @@ namespace ClientKhabri.Pages
             }
             catch (Exception ex)
             {
-                HeaderComponent.Render($"Failed to fetch external servers: {ex.Message}");
+                HeaderComponent.Render($"Failed to fetch external servers: ");
                 AnsiConsole.MarkupLine("\n[grey]Press any key to return...[/]");
                 Console.ReadKey(true);
                 return;
@@ -73,7 +73,7 @@ namespace ClientKhabri.Pages
             }
             catch (Exception ex)
             {
-                HeaderComponent.Render($"Failed to fetch news source: {ex.Message}");
+                HeaderComponent.Render($"Failed to fetch news source: ");
                 AnsiConsole.MarkupLine("\n[grey]Press any key to return...[/]");
                 Console.ReadKey(true);
                 return;
@@ -101,7 +101,7 @@ namespace ClientKhabri.Pages
                 }
                 catch (Exception ex)
                 {
-                    HeaderComponent.Render($"Error updating news source: {ex.Message}");
+                    HeaderComponent.Render($"Error updating news source: ");
                 }
             }
             else

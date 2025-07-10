@@ -142,7 +142,7 @@ namespace ClientKhabri.Pages
             }
             catch (Exception ex)
             {
-                MessageComponent.ShowError($"Failed to fetch personalized news: {ex.Message}");
+                MessageComponent.ShowError($"Failed to fetch personalized news: ");
             }
             
             MenuComponent.ShowMenu(

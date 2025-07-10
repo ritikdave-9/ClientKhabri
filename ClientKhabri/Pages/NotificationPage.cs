@@ -26,7 +26,7 @@ namespace ClientKhabri.Pages
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[red]Failed to fetch notifications: {ex.Message}[/]");
+                AnsiConsole.MarkupLine($"[red]Failed to fetch notifications: [/]");
                 AnsiConsole.MarkupLine("\n[grey]Press any key to return...[/]");
                 Console.ReadKey(true);
                 return;

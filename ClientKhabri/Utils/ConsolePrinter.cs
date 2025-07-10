@@ -59,7 +59,7 @@ namespace ClientKhabri.Utils
             catch (Exception ex)
             {
                 Console.WriteLine("*** AnsiConsole Error");
-                Console.WriteLine($"Reason: {ex.Message}");
+                Console.WriteLine($"Reason: ");
                 Console.WriteLine("Output:");
                 Console.WriteLine(ex.ToString());
             }

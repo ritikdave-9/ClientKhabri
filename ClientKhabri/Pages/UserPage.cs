@@ -39,9 +39,6 @@ namespace ClientKhabri.Pages
                 case "Saved Articles":
                     await SavedNewsPage.ShowAsync();
                     break;
-                case "Search (Coming Soon)":
-                    MessageComponent.ShowMessage("Search not implemented yet.", "yellow");
-                    break;
                 case "Notifications":
                     await NotificationPage.ShowNotificationsAsync();
                     break;
@@ -56,6 +53,7 @@ namespace ClientKhabri.Pages
                     break;
                 case "Logout":
                     Cache.Clear();
+                    await AuthPage.ShowAsync();
                     return;
             }
 

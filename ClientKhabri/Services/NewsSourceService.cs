@@ -38,7 +38,7 @@ namespace ClientKhabri.Services
             }
             catch (Exception ex)
             {
-                ConsolePrinter.PrintError($"Error fetching news sources: {ex.Message}");
+                ConsolePrinter.PrintError($"Error fetching news sources: ");
                 return new List<NewsSourceDetails>();
             }
         }
@@ -58,7 +58,7 @@ namespace ClientKhabri.Services
             catch (Exception ex)
             {
                 {
-                    ConsolePrinter.PrintError($"[ERROR] Failed to update news source: {ex.Message}");
+                    ConsolePrinter.PrintError($"[ERROR] Failed to update news source: ");
                     throw ex;
                 }
             }
@@ -86,7 +86,7 @@ namespace ClientKhabri.Services
             }
             catch (Exception ex)
             {
-                ConsolePrinter.PrintError($"Error fetching news source: {ex.Message}");
+                ConsolePrinter.PrintError($"Error fetching news source: ");
                 return null;
             }
         }

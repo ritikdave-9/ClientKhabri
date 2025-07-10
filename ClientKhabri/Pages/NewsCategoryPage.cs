@@ -27,7 +27,7 @@ namespace ClientKhabri.Pages
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[red]Failed to fetch categories: {ex.Message}[/]");
+                AnsiConsole.MarkupLine($"[red]Failed to fetch categories: [/]");
                 AnsiConsole.MarkupLine("\n[grey]Press any key to return...[/]");
                 Console.ReadKey(true);
                 return;
@@ -68,7 +68,7 @@ namespace ClientKhabri.Pages
                 }
                 catch (Exception ex)
                 {
-                    AnsiConsole.MarkupLine($"[red]Error updating category: {ex.Message}[/]");
+                    AnsiConsole.MarkupLine($"[red]Error updating category: [/]");
                 }
             }
             else
