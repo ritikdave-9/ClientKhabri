@@ -41,7 +41,7 @@ namespace ClientKhabri.Services
             }
             catch (Exception ex)
             {
-                ConsolePrinter.PrintError($"Error fetching news: {ex.Message}");
+                ConsolePrinter.PrintError($"Error fetching news: ");
                 return new List<News>();
             }
         }
@@ -73,7 +73,7 @@ namespace ClientKhabri.Services
             }
             catch (Exception ex)
             {
-                ConsolePrinter.PrintError($"Error saving news: {ex.Message}");
+                ConsolePrinter.PrintError($"Error saving news: ");
                 return false;
             }
         }
@@ -103,7 +103,7 @@ namespace ClientKhabri.Services
             }
             catch (Exception ex)
             {
-                ConsolePrinter.PrintError($"Error fetching saved news: {ex.Message}");
+                ConsolePrinter.PrintError($"Error fetching saved news: ");
                 return new List<News>();
             }
         }
@@ -135,7 +135,7 @@ namespace ClientKhabri.Services
             }
             catch (Exception ex)
             {
-                ConsolePrinter.PrintError($"Error deleting news: {ex.Message}");
+                ConsolePrinter.PrintError($"Error deleting news: ");
                 return false;
             }
         }
@@ -168,7 +168,7 @@ namespace ClientKhabri.Services
             }
             catch (Exception ex)
             {
-                ConsolePrinter.PrintError($"Error reporting news: {ex.Message}");
+                ConsolePrinter.PrintError($"Error reporting news: ");
                 return false;
             }
         }
@@ -220,17 +220,17 @@ namespace ClientKhabri.Services
             }
             catch (HttpRequestException ex)
             {
-                ConsolePrinter.PrintError($"[HTTP ERROR] {ex.Message}");
+                ConsolePrinter.PrintError($"[HTTP ERROR] ");
                 throw;
             }
             catch (JsonException ex)
             {
-                ConsolePrinter.PrintError($"[JSON ERROR] Failed to parse personalized news list. {ex.Message}");
+                ConsolePrinter.PrintError($"[JSON ERROR] Failed to parse personalized news list. ");
                 throw new Exception("Invalid response format received from the server.", ex);
             }
             catch (Exception ex)
             {
-                ConsolePrinter.PrintError($"[GENERAL ERROR] {ex.Message}");
+                ConsolePrinter.PrintError($"[GENERAL ERROR] ");
                 throw new Exception("An unexpected error occurred while fetching personalized news.", ex);
             }
         }

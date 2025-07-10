@@ -8,39 +8,6 @@ namespace ClientKhabri.Pages
 {
     public static class SubscribePage
     {
-        private static async Task<string?> SelectCategoryAsync(string prompt)
-        {
-            var categories = await ServiceProvider.CategoryService.GetAllCategoriesAsync();
-            var choices = categories.Select(c => $"{c.CategoryID}: {c.CategoryName}").ToList();
-            choices.Add("Back");
-            return MenuComponent.ShowMenu(choices, prompt);
-        }
-
-        private static async Task<string?> SelectKeywordAsync(int categoryId, string prompt)
-        {
-            var keywordResponse = await ServiceProvider.KeywordService.GetKeywordsByCategoryAsync(categoryId);
-            var choices = keywordResponse.Items.Select(k => $"{k.KeywordID}: {k.KeywordName}").ToList();
-            choices.Add("Back");
-            return MenuComponent.ShowMenu(choices, prompt);
-        }
-
-        private static async Task<string?> SelectSubscriptionAsync(int userId, string prompt)
-        {
-            var subscriptions = await ServiceProvider.NewsSubscribeService.GetUserSubscriptionsAsync(userId);
-            if (subscriptions == null || subscriptions.Count == 0)
-            {
-                HeaderComponent.Render("You have no subscriptions.");
-                return null;
-            }
-            var choices = subscriptions.Select(s =>
-                s.KeywordID != null
-                    ? $"Category: {s.CategoryName}, Keyword: {s.KeywordName} (ID: {s.KeywordID})"
-                    : $"Category: {s.CategoryName} (ID: {s.CategoryID})"
-            ).ToList();
-            choices.Add("Back");
-            return MenuComponent.ShowMenu(choices, prompt);
-        }
-
         public static async Task ShowSubscribeAsync()
         {
             while (true)
@@ -94,6 +61,39 @@ namespace ClientKhabri.Pages
                 var result = await ServiceProvider.NewsSubscribeService.UnsubscribeAsync(userId, selected.CategoryID, selected.KeywordID);
                 HeaderComponent.Render(result);
             }
+        }
+
+        private static async Task<string?> SelectCategoryAsync(string prompt)
+        {
+            var categories = await ServiceProvider.CategoryService.GetAllCategoriesAsync();
+            var choices = categories.Select(c => $"{c.CategoryID}: {c.CategoryName}").ToList();
+            choices.Add("Back");
+            return MenuComponent.ShowMenu(choices, prompt);
+        }
+
+        private static async Task<string?> SelectKeywordAsync(int categoryId, string prompt)
+        {
+            var keywordResponse = await ServiceProvider.KeywordService.GetKeywordsByCategoryAsync(categoryId);
+            var choices = keywordResponse.Items.Select(k => $"{k.KeywordID}: {k.KeywordName}").ToList();
+            choices.Add("Back");
+            return MenuComponent.ShowMenu(choices, prompt);
+        }
+
+        private static async Task<string?> SelectSubscriptionAsync(int userId, string prompt)
+        {
+            var subscriptions = await ServiceProvider.NewsSubscribeService.GetUserSubscriptionsAsync(userId);
+            if (subscriptions == null || subscriptions.Count == 0)
+            {
+                HeaderComponent.Render("You have no subscriptions.");
+                return null;
+            }
+            var choices = subscriptions.Select(s =>
+                s.KeywordID != null
+                    ? $"Category: {s.CategoryName}, Keyword: {s.KeywordName} (ID: {s.KeywordID})"
+                    : $"Category: {s.CategoryName} (ID: {s.CategoryID})"
+            ).ToList();
+            choices.Add("Back");
+            return MenuComponent.ShowMenu(choices, prompt);
         }
     }
 }

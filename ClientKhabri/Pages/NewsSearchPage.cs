@@ -22,7 +22,7 @@ namespace ClientKhabri.Pages
             }
             catch (Exception ex)
             {
-                MessageComponent.ShowError($"Failed to fetch news: {ex.Message}");
+                MessageComponent.ShowError($"Failed to fetch news: ");
                 MessageComponent.ShowInfo("Press any key to return...");
                 Console.ReadKey(true);
                 return;
